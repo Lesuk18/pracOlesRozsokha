@@ -13,8 +13,8 @@ router.get('/register', function(req,res) {
 });
 
 router.post('/register', (req, res) => {
-  console.log(req.query)
-  const { name, email, password, password2 } = req.query;
+  console.log(req.body)
+  const { name, email, password, password2 } = req.body;
   let errors = [];
 
   if (!name || !email || !password || !password2) {

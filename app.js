@@ -32,6 +32,8 @@ app.use(function(req, res, next) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use ('/', require('./routes/index.js'));
 app.use ('/users', require('./routes/users.js'));
 
