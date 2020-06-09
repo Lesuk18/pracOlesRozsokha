@@ -10,7 +10,7 @@ router.get('/login', function(req,res) {
 });
 
 router.get('/register', function(req,res) {
-  res.send('Register page!');
+  res.json({msg:'Register page!'});
 });
 
 router.post('/register', async (req, res) => {
@@ -19,26 +19,28 @@ router.post('/register', async (req, res) => {
   let errors = [];
 
   if (!name || !email || !password || !password2) {
-    res.send({ msg: 'Please enter all fields' });
+    res.json({ msg: 'Please enter all fields' });
   }
 
   if (password != password2) {
-    res.send({ msg: 'Passwords do not match' });
+    res.json({ msg: 'Passwords do not match' });
   }
 
   if (password.length < 6) {
-    res.send({ msg: 'Password must be at least 6 characters' });
+    res.json({ msg: 'Password must be at least 6 characters' });
   }
 
   if (errors.length > 0) {
-    res.send('errors');
+    res.status(400).json({
+      msg: 'errors',
+  });
   } else {
 
     const user = await User.findOne({ email: email })
     try {
       
         if (user) {
-          res.send({ msg: 'Email already exists' });
+          res.json({ msg: 'Email already exists' });
         } else {
           const newUser = new User({
             name,
@@ -66,8 +68,7 @@ router.post('/register', async (req, res) => {
     }
    catch (err){
     return res.status(400).json({
-      msg: 'Something is not right',
-      
+      msg: 'Something is not right'  
       });
   }
 }
@@ -81,7 +82,6 @@ router.post('/login', function (req, res, next) {
           return res.status(400).json({
               message: 'Something is not right',
               user   : user,
-              
           });
       }
      req.login(user, {session: false}, (err) => {

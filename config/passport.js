@@ -8,12 +8,13 @@ const User = require('../models/User');
 
 module.exports = function(passport) {
   passport.use(
-    new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (email, password, done) => {
+    new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
       // Match user
-      User.findOne({
+      const user = await User.findOne({
         email: email
-      }).then(user => {
-        if (!user) {
+      })
+
+      if (!user) {
           return done(null, false);
         }
 
@@ -27,7 +28,7 @@ module.exports = function(passport) {
           return done(null, false);
         }
       });
-      });
+      
     })
   );
   
@@ -35,14 +36,13 @@ module.exports = function(passport) {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey   : 'olesrSecret'
   },
-  function (jwtPayload, cb) {
-    return User.findById(jwtPayload._id)
-        .then(user => {
-            return cb(null, user);
-        })
-        .catch(err => {
-            return cb(err);
-        });
+  async function (jwtPayload, cb) {
+    const user = await User.findById(jwtPayload._id);
+    try {
+      return cb(null, user);
+    } catch (err) {
+      return cb(err);
+    }
   }
   ));
 

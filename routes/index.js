@@ -5,7 +5,7 @@ const News = require('../models/News')
 const User = require('../models/User')
 const mongoose = require('mongoose');
 
-router.get('/', forwardAuthenticated, (req, res) => res.send('welcome'));
+router.get('/', forwardAuthenticated, (req, res) => res.json({ msg: 'welcome'}));
 const db = require('../config/keys').MongoURI;
 
 
