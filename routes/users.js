@@ -33,35 +33,44 @@ router.post('/register', async (req, res) => {
   if (errors.length > 0) {
     res.send('errors');
   } else {
-    User.findOne({ email: email }).then(user => {
-      if (user) {
-        res.send({ msg: 'Email already exists' });
-      } else {
-        const newUser = new User({
-          name,
-          email,
-          password
-        });
-        console.log(newUser);
-        //res.send('Good');
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser
-              .save()
-              .then(user => {
-                res.send(
-                  'You are now registered and can log in'
-                );
-                //res.redirect('/users/login');
-              })
-              .catch(err => console.log(err));
+
+    const user = await User.findOne({ email: email })
+    try {
+      
+        if (user) {
+          res.send({ msg: 'Email already exists' });
+        } else {
+          const newUser = new User({
+            name,
+            email,
+            password
           });
-        });
-      }
-    });
+          console.log(newUser);
+          //res.send('Good');
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newUser.password, salt, (err, hash) => {
+              if (err) throw err;
+              newUser.password = hash;
+              newUser
+                .save()
+                .then(user => {
+                  res.send(
+                    'You are now registered and can log in'
+                  );
+                  //res.redirect('/users/login');
+                })
+                .catch(err => console.log(err));
+            });
+          });
+        }
+    }
+   catch (err){
+    return res.status(400).json({
+      msg: 'Something is not right',
+      
+      });
   }
+}
 });
 
 

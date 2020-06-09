@@ -36,7 +36,6 @@ module.exports = function(passport) {
     secretOrKey   : 'olesrSecret'
   },
   function (jwtPayload, cb) {
-    console.log(jwtPayload);
     return User.findById(jwtPayload._id)
         .then(user => {
             return cb(null, user);
