@@ -1,3 +1,5 @@
+const passport = require('passport');
+
 module.exports = {
   ensureAuthenticated: function(req, res, next) {
     if (req.isAuthenticated()) {
@@ -10,5 +12,6 @@ module.exports = {
       return next();
     }
     res.redirect('/dashboard');
-  }
+  },
+  jwtAuthenticated: passport.authenticate('jwt')
 };

@@ -3,9 +3,10 @@ const router = express.Router();
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const passport = require('passport');
+const jwt      = require('jsonwebtoken');
 
 router.get('/login', function(req,res) {
-  res.send('Login page!');
+  res.json({msg: 'Login page!'});
 });
 
 router.get('/register', function(req,res) {
@@ -64,12 +65,26 @@ router.post('/register', (req, res) => {
 });
 
 
-router.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/users/login',
-  })
-);
+router.post('/login', function (req, res, next) {
+  passport.authenticate('local', {session: false}, (err, user, info) => {
+      console.log(err, user, info);
+      if (err || !user) {
+          return res.status(400).json({
+              message: 'Something is not right',
+              user   : user,
+              
+          });
+      }
+     req.login(user, {session: false}, (err) => {
+         if (err) {
+             res.send(err);
+         }
+         
+         const token = jwt.sign(user.toJSON(), 'olesrSecret');
+         return res.json({user, token});
+      });
+  })(req, res);
+});
 
 // Logout
 router.get('/logout', (req, res) => {
