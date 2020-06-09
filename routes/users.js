@@ -13,7 +13,7 @@ router.get('/register', function(req,res) {
   res.send('Register page!');
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   console.log(req.body)
   const { name, email, password, password2 } = req.body;
   let errors = [];
