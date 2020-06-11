@@ -48,6 +48,28 @@ router.get('/dashboard/show_news/:id', jwtAuthenticated, async function(req, res
   res.json(news[req.params.id]);
 });
 
+router.get('/dashboard/delete_news/:id', jwtAuthenticated, async function(req, res) {
+ 
+  const news = await News.find({})
+  
+  News.deleteOne({ title: news[req.params.id].title}, function(err, obj) {
+    if (err) throw err;
+    console.log("1 document deleted");
+  });
+  res.json({msg: 'news deleted'});
+});
+
+router.get('/dashboard/update_news/:id', jwtAuthenticated, async function(req, res) {
+ 
+  const news = await News.find({})
+  News.updateOne({title: news[req.params.id].title}, {$set: {description: "Updated"}}, function(err, res) {
+    if (err) throw err;
+    console.log("1 document updated");
+    
+  });
+  res.json(news[req.params.id]);
+});
+
 module.exports = router;
 
 

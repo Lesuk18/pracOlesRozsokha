@@ -75,7 +75,7 @@ router.post('/register', async (req, res) => {
 });
 
 
-router.post('/login', function (req, res, next) {
+router.post('/login', function login (req, res, next) {
   passport.authenticate('local', {session: false}, (err, user, info) => {
       console.log(err, user, info);
       if (err || !user) {
@@ -94,6 +94,8 @@ router.post('/login', function (req, res, next) {
       });
   })(req, res);
 });
+
+
 
 // Logout
 router.get('/logout', (req, res) => {
